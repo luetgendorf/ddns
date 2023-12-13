@@ -23,7 +23,7 @@ jobs:
 
       # Sync the GitHub runner clock with the cloudflare time server
       - name: Sync clock
-        run: sudo sntp -sS time.cloudflare.com
+        run: sudo chronyd -q 'server time.cloudflare.com iburst'
 
       # Checks-out the repo
       - name: Checkout Repo
