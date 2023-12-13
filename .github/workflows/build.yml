@@ -20,11 +20,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Deploy
     steps:
-
-      # Sync the GitHub runner clock with the cloudflare time server
-      - name: Sync clock
-        run: sudo chronyd -q 'server time.cloudflare.com iburst'
-
       # Checks-out the repo
       - name: Checkout Repo
         uses: actions/checkout@v3
