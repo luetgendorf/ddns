@@ -1,0 +1,39 @@
+name: Build
+run-name: Build ${{ github.ref_name }}
+
+on:
+  workflow_dispatch:
+
+  ## Remove the "#" sign from the beginning of the line below to get automated builds on push (code changes in your repository)
+  push:
+    branches:
+      - main
+      
+  ## Remove the "#" sign from the beginning of the two lines below to get automated builds every two months
+  #schedule:
+    #- cron: '0 17 1 */2 *' # Runs at 17:00 UTC on the 1st in Jan, Mar, May, Jul, Sep and Nov.
+    
+  #schedule: ## Schedule the job to run every 1st of month 00:00 UTC daily.
+  #  - cron: '0 0 1 * *'
+build:
+  build:
+    runs-on: ubuntu-latest
+    name: Deploy
+    steps:
+
+      # Sync the GitHub runner clock with the cloudflare time server
+      - name: Sync clock
+        run: sudo sntp -sS time.cloudflare.com
+
+      # Checks-out the repo
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      
+      # Deploy app with wrangler 
+      - name: Deploy app
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
